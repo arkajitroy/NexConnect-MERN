@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import AuthRoutes from "./api/routes/AuthRoutes.routes.js";
 
 // constants
 dotenv.config();
@@ -10,9 +11,7 @@ const PORT = process.env.LOCAL_SERVER_PORT;
 app.use(express.json()); // Parse JSON request bodies
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
+app.use("/api/auth-routes", AuthRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
