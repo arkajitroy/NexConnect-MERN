@@ -13,11 +13,11 @@ export const checkUser = async (req, res, next) => {
     }
 
     const prisma = getPrismaInstance();
-    const user = await prisma.user.findUnique({
+    const userInstance = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (!user) {
+    if (!userInstance) {
       return res.json({
         message: "User Not Found!",
         status: false,
@@ -26,7 +26,7 @@ export const checkUser = async (req, res, next) => {
       return res.json({
         message: "User Found!",
         status: true,
-        data: user,
+        data: userInstance,
       });
     }
   } catch (error) {
