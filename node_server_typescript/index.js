@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import AuthRoutes from "./api/routes/AuthRoutes.routes.js";
 
 // constants
@@ -9,9 +10,10 @@ const PORT = process.env.LOCAL_SERVER_PORT;
 
 // Middleware: Body parsing (for JSON and form data)
 app.use(express.json()); // Parse JSON request bodies
+app.use(cors());
 
 // Routes
-app.use("/api/auth-routes", AuthRoutes);
+app.use("/api/auth", AuthRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

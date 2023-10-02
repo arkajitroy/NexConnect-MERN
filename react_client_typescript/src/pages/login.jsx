@@ -1,27 +1,47 @@
-import { firebaseAuth } from "@/config/firebase";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
+import axios from "axios";
+import { firebaseAuth } from "@/config/firebase";
+import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/router";
 
-function login() {
+const login = () => {
+  const router = useRouter();
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    const { user } = await signInWithPopup(firebaseAuth, provider);
-    console.log("user-google auth : ", user);
+    const {
+      user: { displayName, name, email, photoURL: profileImage },
+    } = await signInWithPopup(firebaseAuth, provider);
+
+    console.log("from firebase => ", displayName, name, email);
+
+    try {
+      if (email) {
+        const { data } = await axios.post(CHECK_USER_ROUTE, { email });
+        console.log(data);
+
+        !data.status ? router.push("/onboarding") : null;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="main-page-container">
-      <div className="h-40 w-1/4 bg-blue-400 flex flex-col items-center justify-center">
-        <h3 className="text-black text-2xl w-max">Login NexChat</h3>
+      <div class="flex flex-col bg-white p-8 rounded shadow-md w-96 text-center">
+        <h2 class="text-2xl font-semibold mb-4">Login to Nexchat</h2>
         <button
           onClick={handleGoogleLogin}
-          className="bg-black text-white my-2 py-2 px-6 w-max"
+          class="flex flex-row items-center justify-center gap-2 bg-slate-700 text-white px-4 py-2 rounded-full font-semibold hover:bg-black focus:outline-none focus:ring focus:ring-green-300"
         >
-          Sign in with Google
+          <FcGoogle />
+          <span>Sign in with Google</span>
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default login;
