@@ -10,7 +10,6 @@ const onboarding = () => {
   const [about, setAbout] = useState("");
   const [displayPicture, setDisplayPicture] = useState(DefaultDP);
 
-  console.log(userInfo);
   return (
     <div className=" bg-panel-header-background h-screen w-screen text-white flex flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center gap-2">

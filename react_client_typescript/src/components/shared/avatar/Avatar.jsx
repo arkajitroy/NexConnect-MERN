@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaCamera } from "react-icons/fa";
-import { CustomContextMenuDialog } from "@/components";
+import {
+  CustomCaptureMenu,
+  CustomContextMenuDialog,
+  CustomPhotoLibraryPicker,
+  CustomPhotoPicker,
+} from "@/components";
+import { DefaultDP } from "@/assets";
 
 const Avatar = ({ type, image, setImage }) => {
   const [hover, setHover] = useState(false);
@@ -10,6 +16,10 @@ const Avatar = ({ type, image, setImage }) => {
     x: 0,
     y: 0,
   });
+  const [grabPhoto, setGrabPhoto] = useState(false);
+  const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
+  const [showCapturePhoto, setShowCapturePhoto] = useState(false);
+
   const showContextMenu = (event) => {
     event.preventDefault();
     setContextMenuCordinates({ x: event.pageX, y: event.pageY });
@@ -17,13 +27,41 @@ const Avatar = ({ type, image, setImage }) => {
   };
 
   const contextMenuOptions = [
-    { name: "Take Photo", callback: () => {} },
-    { name: "Choose From Library", callback: () => {} },
-    { name: "Upload Photo", callback: () => {} },
-    { name: "Remove Photo", callback: () => {} },
+    { name: "Take Photo", callback: () => setShowCapturePhoto(true) },
+    // { name: "Choose From Library", callback: () => setShowPhotoLibrary(true) },
+    { name: "Upload Photo", callback: () => setGrabPhoto(true) },
+    { name: "Remove Photo", callback: () => setImage(DefaultDP) },
   ];
 
-  console.log("on hover state", hover);
+  const handleChangePhotoPicker = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    const data = document.createElement("img");
+
+    reader.onload = function (event) {
+      const result = event.target.result;
+      data.src = result;
+      data.setAttribute("data-src", result);
+    };
+
+    reader.readAsDataURL(file);
+
+    setTimeout(() => {
+      setImage(data.src);
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (grabPhoto) {
+      const data = document.getElementById("photo-picker");
+      data.click();
+      document.body.onfocus = (event) => {
+        setTimeout(() => {
+          setGrabPhoto(false);
+        }, 1000);
+      };
+    }
+  }, [grabPhoto]);
   return (
     <>
       <div className="flex items-center justify-center">
@@ -69,16 +107,24 @@ const Avatar = ({ type, image, setImage }) => {
           </div>
         )}
       </div>
-      {isContextMenuVisible ? (
+      {showCapturePhoto && (
+        <CustomCaptureMenu setImage={setImage} hide={setShowCapturePhoto} />
+      )}
+      {isContextMenuVisible && (
         <CustomContextMenuDialog
           options={contextMenuOptions}
           cordinates={contextMenuCordinates}
           contextMenu={isContextMenuVisible}
           setContextMenu={setIsContextMenuVisible}
         />
-      ) : (
-        <></>
       )}
+      {showPhotoLibrary && (
+        <CustomPhotoLibraryPicker
+          setImage={setImage}
+          hidePhotoLibrary={setShowPhotoLibrary}
+        />
+      )}
+      {grabPhoto && <CustomPhotoPicker onChange={handleChangePhotoPicker} />}
     </>
   );
 };
