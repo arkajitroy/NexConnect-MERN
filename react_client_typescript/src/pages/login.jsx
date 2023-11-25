@@ -47,11 +47,11 @@ const login = () => {
 
   return (
     <div className="main-page-container">
-      <div class="flex flex-col bg-white p-8 rounded shadow-md w-96 text-center">
-        <h2 class="text-2xl font-semibold mb-4">Login to Nexchat</h2>
+      <div className="flex flex-col bg-white p-8 rounded shadow-md w-96 text-center">
+        <h2 className="text-2xl font-semibold mb-4">Login to Nexchat</h2>
         <button
           onClick={handleGoogleLogin}
-          class="flex flex-row items-center justify-center gap-2 bg-slate-700 text-white px-4 py-2 rounded-full font-semibold hover:bg-black focus:outline-none focus:ring focus:ring-green-300"
+          className="flex flex-row items-center justify-center gap-2 bg-slate-700 text-white px-4 py-2 rounded-full font-semibold hover:bg-black focus:outline-none focus:ring focus:ring-green-300"
         >
           <FcGoogle />
           <span>Sign in with Google</span>

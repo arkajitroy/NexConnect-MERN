@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { ChatIllustration } from "@/assets";
+import { ChatIllustration, DefaultDP } from "@/assets";
 import { useStateProvider } from "@/context/StateContext";
+import { Avatar, InputField } from "@/components";
 
 const onboarding = () => {
   const [{ userInfo }] = useStateProvider();
+  const [displayName, setDisplayName] = useState(userInfo?.name || "");
+  const [about, setAbout] = useState("");
+  const [displayPicture, setDisplayPicture] = useState(DefaultDP);
 
   console.log(userInfo);
   return (
@@ -17,7 +21,20 @@ const onboarding = () => {
         <span className="text-2xl">Create your profile</span>
         <div className="flex grap-6 mt-6">
           <div className="flex flex-col items-center justify-center mt-5 gap-6">
-            <span>{userInfo.name}</span>
+            <InputField
+              name="Display Name"
+              state={displayName}
+              setState={setDisplayName}
+              label
+            />
+            <InputField name="About" state={about} setState={setAbout} label />
+          </div>
+          <div>
+            <Avatar
+              type="xl"
+              image={displayPicture}
+              setImage={setDisplayPicture}
+            />
           </div>
         </div>
       </div>
